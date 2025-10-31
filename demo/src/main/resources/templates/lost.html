@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Als verschollen markieren</title>
+</head>
+<body>
+<h1>Netz als verschollen markieren</h1>
+
+<p>
+  <strong th:text="|Netz #${net.id}|"></strong> -
+  <span th:text="${net.location}"></span>
+</p>
+
+<div th:if="${error}" style="color:red" th:text="${error}"></div>
+
+<form th:action="@{/nets/{id}/lost(id=${net.id})}" th:object="${person}" method="post">
+  <div>
+    Name: <input th:field="*{name}" required>
+  </div>
+  <div>
+    Telefon (optional): <input th:field="*{phone}">
+  </div>
+  <button type="submit">Als verschollen markieren</button>
+  <a th:href="@{/nets}">Abbrechen</a>
+</form>
+
+</body>
+</html>

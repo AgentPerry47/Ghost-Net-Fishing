@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Neues Geisternetz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<h1>Geisternetz melden</h1>
+
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+<form th:action="@{/nets}" th:object="${net}" method="post" id="netForm">
+
+  <input th:if="${_csrf != null}" type="hidden"
+         th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+  <div>
+    <label for="location">Ort:</label>
+    <input id="location" type="text" th:field="*{location}" placeholder="z. B. 53.12N 7.56E" required>
+  </div>
+
+  <div>
+    <label for="size">Größe:</label>
+    <input id="size" type="text" th:field="*{size}" placeholder="klein / mittel / groß">
+  </div>
+
+  <hr>
+
+  <h3>Meldende Person</h3>
+  <label>
+    <input type="checkbox" th:field="*{anonymousReport}"> Anonym melden
+  </label>
+
+  <div id="reporterFields">
+    <div>
+      <label for="reporterName">Name:</label>
+      <input id="reporterName" type="text" th:field="*{reporterName}">
+    </div>
+    <div>
+      <label for="reporterPhone">Telefon (optional):</label>
+      <input id="reporterPhone" type="text" th:field="*{reporterPhone}">
+    </div>
+  </div>
+
+  <button type="submit">Speichern</button>
+  <a th:href="@{/nets}">Abbrechen</a>
+</form>
+
+<script>
+  const anonCb = document.querySelector('input[name="anonymousReport"]');
+  const reporterFields = document.getElementById('reporterFields');
+  const reporterName = document.querySelector('input[name="reporterName"]');
+
+  function applyRules() {
+    if (!anonCb || !reporterFields || !reporterName) return;
+    if (anonCb.checked) {
+      reporterFields.style.opacity = 0.6;
+      reporterName.required = false;
+    } else {
+      reporterFields.style.opacity = 1;
+      reporterName.required = true;
+    }
+  }
+
+  if (anonCb) {
+    anonCb.addEventListener('change', applyRules);
+    applyRules();
+  }
+</script>
+</body>
+</html>

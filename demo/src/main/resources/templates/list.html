@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Geisternetze</title>
+  <style>
+    .status-GEMELDET { color: orange; font-weight: bold; }
+    .status-BERGUNG_BEVORSTEHEND { color: blue; font-weight: bold; }
+    .status-GEBORGEN { color: green; font-weight: bold; }
+    .status-VERSCHOLLEN { color: red; font-weight: bold; }
+    table { border-collapse: collapse; margin-top: 1em; }
+    th, td { border: 1px solid #888; padding: 6px 10px; }
+  </style>
+</head>
+<body>
+<h1>Geisternetze</h1>
+
+<p>
+  <a th:href="@{/nets/new}">Neues Netz melden</a> |
+  <a th:href="@{/nets}">Alle Netze</a> |
+  <a th:href="@{/nets/open}">Nur offene Netze</a>
+</p>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Ort</th>
+    <th>Größe</th>
+    <th>Status</th>
+    <th>Meldende Person</th>
+    <th>Aktionen</th>
+  </tr>
+
+  <tr th:each="n : ${nets}">
+    <td th:text="${n.id}">1</td>
+    <td th:text="${n.location}">Ort</td>
+    <td th:text="${n.size}">Größe</td>
+    <td th:text="${n.status}" th:class="'status-' + ${n.status}">Status</td>
+
+    <td>
+      <span th:if="${n.anonymousReport}">Anonym</span>
+      <span th:unless="${n.anonymousReport}">
+        <span th:text="${n.reporterName != null ? n.reporterName : 'Unbekannt'}"></span>
+        <span th:text="' – Telefonnummer: ' + (${n.reporterPhone != null && !#strings.isEmpty(n.reporterPhone) ? n.reporterPhone : 'unbekannt'})"></span>
+      </span>
+    </td>
+
+    <td>
+      <span th:if="${n.status == T(com.example.demo.model.GhostNet.Status).GEBORGEN 
+        or n.status == T(com.example.demo.model.GhostNet.Status).VERSCHOLLEN}">–</span>
+
+      <span th:unless="${n.status == T(com.example.demo.model.GhostNet.Status).GEBORGEN 
+        or n.status == T(com.example.demo.model.GhostNet.Status).VERSCHOLLEN}">
+        <a th:href="@{/nets/{id}/assign(id=${n.id})}">Zuordnen</a> |
+        <a th:href="@{/nets/{id}/done(id=${n.id})}">Als geborgen markieren</a> |
+        <a th:href="@{/nets/{id}/lost(id=${n.id})}">Als verschollen markieren</a>
+      </span>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
