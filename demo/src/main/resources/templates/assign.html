@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Bergung zuordnen</title>
+</head>
+<body>
+<h1>Bergung zuordnen</h1>
+
+<p>
+  <strong th:text="|Netz #${net.id}|">Netz-ID</strong>
+  - <span th:text="${net.location}">Ort</span>
+</p>
+
+<div th:if="${error}" style="color:red" th:text="${error}"></div>
+
+<form th:action="@{/nets/{id}/assign(id=${net.id})}" th:object="${person}" method="post">
+
+  <div>
+    Name: <input th:field="*{name}" required>
+  </div>
+  <div>
+    Telefon (optional): <input th:field="*{phone}">
+  </div>
+  
+  <button type="submit">Speichern</button>
+  <a th:href="@{/nets}">Abbrechen</a>
+</form>
+
+</body>
+</html>
